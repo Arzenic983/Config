@@ -15,6 +15,9 @@ class Okno(QMainWindow):
         self.Output.setReadOnly(True)
         self.ContinueBtn.setEnabled(False)
         self.page_num = 0
+
+
+
         self.CPUList.currentTextChanged.connect(self.part_setup)
         self.MTRBRDList.currentTextChanged.connect(self.part_setup)
         self.GPUList.currentTextChanged.connect(self.part_setup)
@@ -32,23 +35,19 @@ class Okno(QMainWindow):
         self.Output.clear()
         self.stackedWidget.setCurrentIndex(self.page_num)
         if self.page_num == 8:
-            self.Tablo.setItem(0, 0, QTableWidgetItem(self.cpu.name))
-            self.Tablo.setItem(1, 0, QTableWidgetItem(self.motherboard.name))
-            self.Tablo.setItem(2, 0, QTableWidgetItem(self.gpu.name))
-            self.Tablo.setItem(3, 0, QTableWidgetItem(self.ram.name))
-            self.Tablo.setItem(4, 0, QTableWidgetItem(self.cooler.name))
-            self.Tablo.setItem(5, 0, QTableWidgetItem(self.corpus.name))
-            self.Tablo.setItem(6, 0, QTableWidgetItem(self.storage.name))
-            self.Tablo.setItem(7, 0, QTableWidgetItem(self.power_supply.name))
-
-            self.Tablo.setItem(0, 1, QTableWidgetItem(str(self.cpu.price)))
-            self.Tablo.setItem(1, 1, QTableWidgetItem(str(self.motherboard.price)))
-            self.Tablo.setItem(2, 1, QTableWidgetItem(str(self.gpu.price)))
-            self.Tablo.setItem(3, 1, QTableWidgetItem(str(self.ram.price)))
-            self.Tablo.setItem(4, 1, QTableWidgetItem(str(self.cooler.price)))
-            self.Tablo.setItem(5, 1, QTableWidgetItem(str(self.corpus.price)))
-            self.Tablo.setItem(6, 1, QTableWidgetItem(str(self.storage.price)))
-            self.Tablo.setItem(7, 1, QTableWidgetItem(str(self.power_supply.price)))
+            self.objects = [self.cpu, self.motherboard, self.gpu, self.ram,
+                            self.cooler, self.corpus, self.storage, self.power_supply]
+            for i in range(2):
+                if not i:
+                    n = 0
+                    for j in self.objects:
+                        self.Tablo.setItem(n, i, QTableWidgetItem(j.name))
+                        n += 1
+                else:
+                    n = 0
+                    for j in self.objects:
+                        self.Tablo.setItem(n, i, QTableWidgetItem(str(j.price)))
+                        n += 1
 
             n = self.cpu.price + self.motherboard.price + self.gpu.price
             n += self.ram.price + self.cooler.price + self.corpus.price
