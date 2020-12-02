@@ -6,8 +6,6 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
 
 
-# убрать глобалы (выполнено)
-
 class Okno(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -15,8 +13,6 @@ class Okno(QMainWindow):
         self.Output.setReadOnly(True)
         self.ContinueBtn.setEnabled(False)
         self.page_num = 0
-
-
 
         self.CPUList.currentTextChanged.connect(self.part_setup)
         self.MTRBRDList.currentTextChanged.connect(self.part_setup)
@@ -35,17 +31,17 @@ class Okno(QMainWindow):
         self.Output.clear()
         self.stackedWidget.setCurrentIndex(self.page_num)
         if self.page_num == 8:
-            self.objects = [self.cpu, self.motherboard, self.gpu, self.ram,
-                            self.cooler, self.corpus, self.storage, self.power_supply]
+            objects = [self.cpu, self.motherboard, self.gpu, self.ram,
+                       self.cooler, self.corpus, self.storage, self.power_supply]
             for i in range(2):
                 if not i:
                     n = 0
-                    for j in self.objects:
+                    for j in objects:
                         self.Tablo.setItem(n, i, QTableWidgetItem(j.name))
                         n += 1
                 else:
                     n = 0
-                    for j in self.objects:
+                    for j in objects:
                         self.Tablo.setItem(n, i, QTableWidgetItem(str(j.price)))
                         n += 1
 
@@ -60,47 +56,37 @@ class Okno(QMainWindow):
             )
 
     def update_lists(self):
-
         for i in main_request('CPU'):
             self.CPUList.addItems(i)
-
         for i in main_request('MTRBRD'):
             self.MTRBRDList.addItems(i)
-
         for i in main_request('GPU'):
             self.GPUList.addItems(i)
-
         for i in main_request('RAM'):
             self.RAMList.addItems(i)
-
         for i in main_request('COOLER'):
             self.COOLERList.addItems(i)
-
         for i in main_request('CORPUS'):
             self.CORPUSList.addItems(i)
-
         for i in main_request('STRG'):
             self.STRGList.addItems(i)
-
         for i in main_request('PWRSPL'):
             self.PWRSPLList.addItems(i)
 
-        # А вот эту хрень надо раскидать по отдельным запросом к QComboBox, что на QStackedWidget
+        # А вот эту хрень надо раскидать по отдельным запросом к QComboBox, что на QStackedWidget (готово)
 
-    def part_setup(self):  # part_name берётся из комбобокса
+    def part_setup(self):
+        part_name = ''  # part_name берётся из комбобокса
         if self.page_num == 0:
             part_name = str(self.CPUList.currentText())
         if self.page_num == 1:
             part_name = str(self.MTRBRDList.currentText())
-
         if self.page_num == 2:
             part_name = str(self.GPUList.currentText())
         if self.page_num == 3:
             part_name = str(self.RAMList.currentText())
-
         if self.page_num == 4:
             part_name = str(self.COOLERList.currentText())
-
         if self.page_num == 5:
             part_name = str(self.CORPUSList.currentText())
         if self.page_num == 6:
@@ -147,6 +133,9 @@ class Okno(QMainWindow):
             return 'Ошибка вывода: проблема в инициализации класса детали'
         self.Output.setText(self.obj.da_print(part_name))
         self.ContinueBtn.setEnabled(True)
+
+        # Arthur's code
+
         if part_name == 'Ballistix RGB 16gb':
             self.ContinueBtn.setEnabled(False)
         if part_name == 'am4 Wraith Prism':
