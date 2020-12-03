@@ -4,14 +4,14 @@ class Part:
         self.manufacturer = m
 
 
-
 class CPU(Part):
-    def __init__(self, price, m, s, t, cores, threads):
+    def __init__(self, price, m, s, t, cores, threads, freq):
         super().__init__(price, m)
         self.socket = s
         self.tdp = t
         self.core = cores
         self.thread = threads
+        self.frequency = freq
 
     def da_print(self, name):
         self.name = name
@@ -22,6 +22,7 @@ class CPU(Part):
     - Сокет: {self.socket}
     - Теплопакет: {self.tdp}
     - Ядра/Потоки: {self.core}/{self.thread}
+    - Частота: {self.frequency}
         """
 
 
