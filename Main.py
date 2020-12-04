@@ -23,6 +23,8 @@ class Okno(QMainWindow):
         self.AllItems.append(str(self.STRGList.itemText(i)) for i in range(self.CPUList.count()))
         self.AllItems.append(str(self.PWRSPLList.itemText(i)) for i in range(self.CPUList.count()))
 
+        self.Order.clicked.connect(self.onClickSave)
+
         self.CPUList.setDuplicatesEnabled(False)
         self.MTRBRDList.setDuplicatesEnabled(False)
         self.GPUList.setDuplicatesEnabled(False)
@@ -194,6 +196,15 @@ class Okno(QMainWindow):
         self.Output.setText(self.obj.da_print(part_name))
         if self.filtre_alpha() == True:
             self.ContinueBtn.setEnabled(True)
+
+    def onClickSave(self):
+        with open('test_save.txt', 'w', encoding='UTF-8') as out_file:
+
+            for row in range(self.Tablo.rowCount()):
+                for column in range(self.Tablo.columnCount()):
+                    item = self.Tablo.item(row, column)
+                    print(item.text() if item else "", end=', ', file=out_file)
+                print('', file=out_file)
 
         # Arthur's code
 
