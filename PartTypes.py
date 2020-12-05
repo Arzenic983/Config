@@ -167,8 +167,8 @@ class STRG(Part):
 class PWRSPL(Part):
     def __init__(self, price, m, rgb, watts, cpu, gpu):
         super().__init__(price, m)
-        self.rgb = rgb
         self.power = watts
+        self.rgb = rgb
         self.cpu_pin = cpu
         self.gpu_pin = gpu
 
