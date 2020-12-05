@@ -16,7 +16,7 @@ class CPU(Part):
     def da_print(self, name):
         self.name = name
         return f"""
-    Процессор {name}:
+    Процессор {self.name}:
     - Цена: {self.price}
     - Производитель: {self.manufacturer}
     - Сокет: {self.socket}
@@ -42,7 +42,7 @@ class MTRBRD(Part):
     def da_print(self, name):
         self.name = name
         return f"""
-    Материнская плата {name}:                                
+    Материнская плата {self.name}:                                
     - Цена: {self.price}                                      
     - Производитель: {self.manufacturer}                     
     - Сокет: {self.socket}                                    
@@ -71,7 +71,7 @@ class GPU(Part):
     def da_print(self, name):
         self.name = name
         return f"""
-    Графический ускоритель {name}:
+    Графический ускоритель {self.name}:
     - Цена: {self.price}
     - Производитель: {self.manufacturer}                    
     - Версия PCI-E: {self.pci_e}                            
@@ -96,7 +96,7 @@ class RAM(Part):
     def da_print(self, name):
         self.name = name
         return f""" 
-    Оперативное запоминающее устройство {name}:
+    Оперативное запоминающее устройство {self.name}:
     - Цена: {self.price}
     - Производитель: {self.manufacturer}                    
     - Объём комплекта: {self.size}                          
@@ -118,7 +118,7 @@ class COOLER(Part):
     def da_print(self, name):
         self.name = name
         return f""" 
-    Процессорный кулер {name}:
+    Процессорный кулер {self.name}:
     - Цена: {self.price} 
     - Производитель: {self.manufacturer}                    
     - Рассеивает тепла: {self.tdp}                          
@@ -138,7 +138,7 @@ class CORPUS(Part):
     def da_print(self, name):
         self.name = name
         return f"""
-    Корпус компьютера {name}:
+    Корпус компьютера {self.name}:
     - Цена: {self.price}
     - Производитель: {self.manufacturer}
     - Формфактор: {self.formfactor}
@@ -156,7 +156,7 @@ class STRG(Part):
     def da_print(self, name):
         self.name = name
         return f"""
-    Накопитель данных {name}:
+    Накопитель данных {self.name}:
     - Цена: {self.price}
     - Производитель: {self.manufacturer}
     - Объём: {self.size}
@@ -175,7 +175,7 @@ class PWRSPL(Part):
     def da_print(self, name):
         self.name = name
         return f"""
-        Блок питания {name}: 
+        Блок питания {self.name}: 
         - Цена: {self.price}                              
         - Производитель: {self.manufacturer}             
         - Мощность: {self.power}                        
