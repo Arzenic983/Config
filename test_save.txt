@@ -1,0 +1,9 @@
+<built-in method toPlainText of QTextEdit object at 0x00000209093E4AF0>
+Core i3 10100f, 9000, 
+ASRock B460 Steel Legend, 10000, 
+AMD Radeon RX 6800, 45000, 
+A-data XPG 16gb, 6000, 
+lga 1200 BOX cooler, 500, 
+Cougar MX 330g, 3500, 
+HDD Barracuda 1tb, 3000, 
+Chieftec Proton 600w, 5000, 

@@ -13,6 +13,39 @@ class Okno(QMainWindow):
         self.Output.setReadOnly(True)
         self.ContinueBtn.setEnabled(False)
         self.page_num = 0
+        self.AllItems = []
+        self.AllItems.append(str(self.CPUList.itemText(i)) for i in range(self.CPUList.count()))
+        self.AllItems.append(str(self.MTRBRDList.itemText(i)) for i in range(self.CPUList.count()))
+        self.AllItems.append(str(self.GPUList.itemText(i)) for i in range(self.CPUList.count()))
+        self.AllItems.append(str(self.RAMList.itemText(i)) for i in range(self.CPUList.count()))
+        self.AllItems.append(str(self.COOLERList.itemText(i)) for i in range(self.CPUList.count()))
+        self.AllItems.append(str(self.CORPUSList.itemText(i)) for i in range(self.CPUList.count()))
+        self.AllItems.append(str(self.STRGList.itemText(i)) for i in range(self.CPUList.count()))
+        self.AllItems.append(str(self.PWRSPLList.itemText(i)) for i in range(self.CPUList.count()))
+
+        self.Order.clicked.connect(self.onClickSave)
+
+        self.CPUList.setDuplicatesEnabled(False)
+        self.MTRBRDList.setDuplicatesEnabled(False)
+        self.GPUList.setDuplicatesEnabled(False)
+        self.RAMList.setDuplicatesEnabled(False)
+        self.COOLERList.setDuplicatesEnabled(False)
+        self.CORPUSList.setDuplicatesEnabled(False)
+        self.STRGList.setDuplicatesEnabled(False)
+        self.PWRSPLList.setDuplicatesEnabled(False)
+
+        # Добавлен блок подключения фильтов к комбобоксам. Не работает. Дубли. Артур сволочь в кубе
+
+        # self.CPUList.highlighted.connect(self.update_lists)
+        # self.MTRBRDList.highlighted.connect(self.update_lists)
+        # self.GPUList.highlighted.connect(self.update_lists)
+        # self.RAMList.highlighted.connect(self.update_lists)
+        # self.COOLERList.highlighted.connect(self.update_lists)
+        # self.CORPUSList.highlighted.connect(self.update_lists)
+        # self.STRGList.highlighted.connect(self.update_lists)
+        # self.PWRSPLList.highlighted.connect(self.update_lists)
+
+        # Сетап детали
 
         self.CPUList.currentTextChanged.connect(self.part_setup)
         self.MTRBRDList.currentTextChanged.connect(self.part_setup)
@@ -58,24 +91,54 @@ class Okno(QMainWindow):
     def update_lists(self):
         for i in main_request('CPU'):
             self.CPUList.addItems(i)
+
         for i in main_request('MTRBRD'):
             self.MTRBRDList.addItems(i)
+
         for i in main_request('GPU'):
             self.GPUList.addItems(i)
+
         for i in main_request('RAM'):
             self.RAMList.addItems(i)
+
         for i in main_request('COOLER'):
             self.COOLERList.addItems(i)
+
         for i in main_request('CORPUS'):
             self.CORPUSList.addItems(i)
+
         for i in main_request('STRG'):
             self.STRGList.addItems(i)
+
         for i in main_request('PWRSPL'):
             self.PWRSPLList.addItems(i)
 
         # А вот эту хрень надо раскидать по отдельным запросом к QComboBox, что на QStackedWidget (готово)
+        # Спасибо, Артур (хотя ты это наверное даже не прочитаешь)
+        # что дал мне уникальную возможность сделать это за тебя
+
+    def filtre_alpha(self):
+        a = True
+        if self.page_num >= 1:
+            a = False
+            if self.cpu.socket == self.motherboard.socket:
+                a = True
+        if self.page_num >= 3:
+            a = False
+            if self.motherboard.mem_freq >= self.ram.timings[0:4]:
+                if self.motherboard.mem_type == self.ram.mem_type:
+                    a = True
+        if self.page_num >= 4:
+            a = False
+            if self.cooler.soc == self.cpu.socket:
+                a = True
+        if a:
+            self.ContinueBtn.setEnabled(True)
+
+
 
     def part_setup(self):
+        self.ContinueBtn.setEnabled(False)
         part_name = ''  # part_name берётся из комбобокса
         if self.page_num == 0:
             part_name = str(self.CPUList.currentText())
@@ -97,14 +160,13 @@ class Okno(QMainWindow):
             self.Output.setText("Выберите интересующую Вас деталь")
             self.ContinueBtn.setEnabled(False)
             return
-        self.ContinueBtn.setEnabled(True)
         typo, ID = get_type(part_name), get_id(part_name)
         info = get_info(part_name, typo, ID)
         info.remove(info[2])
         self.obj = ''
         try:
             if typo == 'CPU':
-                self.cpu = CPU(info[0], info[1], info[2], info[3], info[4], info[5])
+                self.cpu = CPU(info[0], info[1], info[2], info[3], info[4], info[5], info[6])
                 self.obj = self.cpu
             if typo == 'MTRBRD':
                 self.motherboard = MTRBRD(info[0], info[1], info[2], info[3], info[4],
@@ -132,16 +194,26 @@ class Okno(QMainWindow):
         except:
             return 'Ошибка вывода: проблема в инициализации класса детали'
         self.Output.setText(self.obj.da_print(part_name))
-        self.ContinueBtn.setEnabled(True)
+        if self.filtre_alpha() == True:
+            self.ContinueBtn.setEnabled(True)
+
+    def onClickSave(self):
+        with open('test_save.txt', 'w', encoding='UTF-8') as out_file:
+
+            for row in range(self.Tablo.rowCount()):
+                for column in range(self.Tablo.columnCount()):
+                    item = self.Tablo.item(row, column)
+                    print(item.text() if item else "", end=', ', file=out_file)
+                print('', file=out_file)
 
         # Arthur's code
 
-        if part_name == 'Ballistix RGB 16gb':
-            self.ContinueBtn.setEnabled(False)
-        if part_name == 'am4 Wraith Prism':
-            self.ContinueBtn.setEnabled(False)
-        if part_name == 'am4 B450 Steel Legend':
-            self.ContinueBtn.setEnabled(False)
+        #        if part_name == 'Ballistix RGB 16gb':
+        #            self.ContinueBtn.setEnabled(False)
+        #        if part_name == 'am4 Wraith Prism':
+        #            self.ContinueBtn.setEnabled(False)
+        #        if part_name == 'am4 B450 Steel Legend':
+        #            self.ContinueBtn.setEnabled(False)
 
 
 if __name__ == '__main__':
